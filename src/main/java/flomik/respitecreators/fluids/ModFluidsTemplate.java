@@ -67,4 +67,9 @@ public abstract class ModFluidsTemplate extends FlowingFluid {
         return 100.0f;
     }
 
+    @Override
+    public boolean isSame(Fluid fluid) {
+        return fluid == getSource() || fluid == getFlowing();
+    }
+
 }

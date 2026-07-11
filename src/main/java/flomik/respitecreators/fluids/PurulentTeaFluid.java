@@ -7,6 +7,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.LevelReader;
 
 public abstract class PurulentTeaFluid extends ModFluidsTemplate {
 
@@ -33,6 +34,21 @@ public abstract class PurulentTeaFluid extends ModFluidsTemplate {
     @Override
     public net.neoforged.neoforge.fluids.FluidType getFluidType() {
         return flomik.respitecreators.init.ModFluidTypesRegister.PURULENT_TEA_TYPE.get();
+    }
+
+    @Override
+    public int getSlopeFindDistance(LevelReader levelReader) {
+        return 4;
+    }
+
+    @Override
+    public int getDropOff(LevelReader levelReader) {
+        return 1;
+    }
+
+    @Override
+    public int getTickDelay(LevelReader levelReader) {
+        return 5;
     }
 
     public static class Flowing extends PurulentTeaFluid {
