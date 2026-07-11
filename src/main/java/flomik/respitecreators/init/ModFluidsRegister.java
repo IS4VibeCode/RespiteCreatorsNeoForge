@@ -2,298 +2,231 @@ package flomik.respitecreators.init;
 
 import flomik.respitecreators.RespiteCreatorsMod;
 import flomik.respitecreators.fluids.*;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class ModFluidsRegister {
-    public static FlowableFluid STILL_PURULENT_TEA, STILL_DANDELION_TEA, STILL_ROSE_HIP_TEA, STILL_BLACK_TEA, STILL_YELLOW_TEA, STILL_GREEN_TEA, STILL_COFFEE, STILL_LONG_DANDELION_TEA, STILL_LONG_BLACK_TEA, STILL_LONG_YELLOW_TEA, STILL_LONG_GREEN_TEA, STILL_LONG_COFFEE, STILL_STRONG_PURULENT_TEA, STILL_STRONG_ROSE_HIP_TEA, STILL_STRONG_BLACK_TEA, STILL_STRONG_YELLOW_TEA, STILL_STRONG_GREEN_TEA, STILL_STRONG_COFFEE, STILL_ROSE_HIP_JAM, STILL_TEA_CURRY, STILL_BLAZING_CHILI;
-    public static FlowableFluid FLOWING_PURULENT_TEA, FLOWING_DANDELION_TEA, FLOWING_ROSE_HIP_TEA, FLOWING_BLACK_TEA, FLOWING_YELLOW_TEA, FLOWING_GREEN_TEA, FLOWING_COFFEE, FLOWING_LONG_DANDELION_TEA, FLOWING_LONG_BLACK_TEA, FLOWING_LONG_YELLOW_TEA, FLOWING_LONG_GREEN_TEA, FLOWING_LONG_COFFEE, FLOWING_STRONG_PURULENT_TEA, FLOWING_STRONG_ROSE_HIP_TEA, FLOWING_STRONG_BLACK_TEA, FLOWING_STRONG_YELLOW_TEA, FLOWING_STRONG_GREEN_TEA, FLOWING_STRONG_COFFEE, FLOWING_ROSE_HIP_JAM, FLOWING_TEA_CURRY, FLOWING_BLAZING_CHILI;
-    public static Block PURULENT_TEA_BLOCK, DANDELION_TEA_BLOCK, ROSE_HIP_TEA_BLOCK, BLACK_TEA_BLOCK, YELLOW_TEA_BLOCK, GREEN_TEA_BLOCK, COFFEE_BLOCK, LONG_DANDELION_TEA_BLOCK, LONG_BLACK_TEA_BLOCK, LONG_YELLOW_TEA_BLOCK, LONG_GREEN_TEA_BLOCK, LONG_COFFEE_BLOCK, STRONG_PURULENT_TEA_BLOCK, STRONG_ROSE_HIP_TEA_BLOCK, STRONG_BLACK_TEA_BLOCK, STRONG_YELLOW_TEA_BLOCK, STRONG_GREEN_TEA_BLOCK, STRONG_COFFEE_BLOCK, ROSE_HIP_JAM_BLOCK, TEA_CURRY_BLOCK, BLAZING_CHILI_BLOCK;
-    public static Item PURULENT_TEA_BUCKET, DANDELION_TEA_BUCKET, ROSE_HIP_TEA_BUCKET, BLACK_TEA_BUCKET, YELLOW_TEA_BUCKET, GREEN_TEA_BUCKET, COFFEE_BUCKET, LONG_DANDELION_TEA_BUCKET, LONG_BLACK_TEA_BUCKET, LONG_YELLOW_TEA_BUCKET, LONG_GREEN_TEA_BUCKET, LONG_COFFEE_BUCKET, STRONG_PURULENT_TEA_BUCKET, STRONG_ROSE_HIP_TEA_BUCKET, STRONG_BLACK_TEA_BUCKET, STRONG_YELLOW_TEA_BUCKET, STRONG_GREEN_TEA_BUCKET, STRONG_COFFEE_BUCKET, ROSE_HIP_JAM_BUCKET, TEA_CURRY_BUCKET, BLAZING_CHILI_BUCKET;
+
+    public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, RespiteCreatorsMod.MOD_ID);
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(RespiteCreatorsMod.MOD_ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(RespiteCreatorsMod.MOD_ID);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_PURULENT_TEA = registerFluid("purulent_tea", PurulentTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_PURULENT_TEA = registerFluid("flowing_purulent_tea", PurulentTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> PURULENT_TEA_BLOCK = registerFluidBlock("purulent_tea_block", STILL_PURULENT_TEA);
+    public static final DeferredHolder<Item, BucketItem> PURULENT_TEA_BUCKET = registerBucket("purulent_tea_bucket", STILL_PURULENT_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_DANDELION_TEA = registerFluid("dandelion_tea", DandelionTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_DANDELION_TEA = registerFluid("flowing_dandelion_tea", DandelionTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> DANDELION_TEA_BLOCK = registerFluidBlock("dandelion_tea_block", STILL_DANDELION_TEA);
+    public static final DeferredHolder<Item, BucketItem> DANDELION_TEA_BUCKET = registerBucket("dandelion_tea_bucket", STILL_DANDELION_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_ROSE_HIP_TEA = registerFluid("rose_hip_tea", RoseHipTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_ROSE_HIP_TEA = registerFluid("flowing_rose_hip_tea", RoseHipTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> ROSE_HIP_TEA_BLOCK = registerFluidBlock("rose_hip_tea_block", STILL_ROSE_HIP_TEA);
+    public static final DeferredHolder<Item, BucketItem> ROSE_HIP_TEA_BUCKET = registerBucket("rose_hip_tea_bucket", STILL_ROSE_HIP_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_BLACK_TEA = registerFluid("black_tea", BlackTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_BLACK_TEA = registerFluid("flowing_black_tea", BlackTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> BLACK_TEA_BLOCK = registerFluidBlock("black_tea_block", STILL_BLACK_TEA);
+    public static final DeferredHolder<Item, BucketItem> BLACK_TEA_BUCKET = registerBucket("black_tea_bucket", STILL_BLACK_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_YELLOW_TEA = registerFluid("yellow_tea", YellowTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_YELLOW_TEA = registerFluid("flowing_yellow_tea", YellowTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> YELLOW_TEA_BLOCK = registerFluidBlock("yellow_tea_block", STILL_YELLOW_TEA);
+    public static final DeferredHolder<Item, BucketItem> YELLOW_TEA_BUCKET = registerBucket("yellow_tea_bucket", STILL_YELLOW_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_GREEN_TEA = registerFluid("green_tea", GreenTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_GREEN_TEA = registerFluid("flowing_green_tea", GreenTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> GREEN_TEA_BLOCK = registerFluidBlock("green_tea_block", STILL_GREEN_TEA);
+    public static final DeferredHolder<Item, BucketItem> GREEN_TEA_BUCKET = registerBucket("green_tea_bucket", STILL_GREEN_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_COFFEE = registerFluid("coffee", CoffeeFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_COFFEE = registerFluid("flowing_coffee", CoffeeFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> COFFEE_BLOCK = registerFluidBlock("coffee_block", STILL_COFFEE);
+    public static final DeferredHolder<Item, BucketItem> COFFEE_BUCKET = registerBucket("coffee_bucket", STILL_COFFEE);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_LONG_DANDELION_TEA = registerFluid("long_dandelion_tea", LongDandelionTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_LONG_DANDELION_TEA = registerFluid("flowing_long_dandelion_tea", LongDandelionTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> LONG_DANDELION_TEA_BLOCK = registerFluidBlock("long_dandelion_tea_block", STILL_LONG_DANDELION_TEA);
+    public static final DeferredHolder<Item, BucketItem> LONG_DANDELION_TEA_BUCKET = registerBucketNoTab("long_dandelion_tea_bucket", STILL_LONG_DANDELION_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_LONG_BLACK_TEA = registerFluid("long_black_tea", LongBlackTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_LONG_BLACK_TEA = registerFluid("flowing_long_black_tea", LongBlackTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> LONG_BLACK_TEA_BLOCK = registerFluidBlock("long_black_tea_block", STILL_LONG_BLACK_TEA);
+    public static final DeferredHolder<Item, BucketItem> LONG_BLACK_TEA_BUCKET = registerBucketNoTab("long_black_tea_bucket", STILL_LONG_BLACK_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_LONG_YELLOW_TEA = registerFluid("long_yellow_tea", LongYellowTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_LONG_YELLOW_TEA = registerFluid("flowing_long_yellow_tea", LongYellowTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> LONG_YELLOW_TEA_BLOCK = registerFluidBlock("long_yellow_tea_block", STILL_LONG_YELLOW_TEA);
+    public static final DeferredHolder<Item, BucketItem> LONG_YELLOW_TEA_BUCKET = registerBucketNoTab("long_yellow_tea_bucket", STILL_LONG_YELLOW_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_LONG_GREEN_TEA = registerFluid("long_green_tea", LongGreenTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_LONG_GREEN_TEA = registerFluid("flowing_long_green_tea", LongGreenTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> LONG_GREEN_TEA_BLOCK = registerFluidBlock("long_green_tea_block", STILL_LONG_GREEN_TEA);
+    public static final DeferredHolder<Item, BucketItem> LONG_GREEN_TEA_BUCKET = registerBucketNoTab("long_green_tea_bucket", STILL_LONG_GREEN_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_LONG_COFFEE = registerFluid("long_coffee", LongCoffeeFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_LONG_COFFEE = registerFluid("flowing_long_coffee", LongCoffeeFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> LONG_COFFEE_BLOCK = registerFluidBlock("long_coffee_block", STILL_LONG_COFFEE);
+    public static final DeferredHolder<Item, BucketItem> LONG_COFFEE_BUCKET = registerBucketNoTab("long_coffee_bucket", STILL_LONG_COFFEE);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_STRONG_PURULENT_TEA = registerFluid("strong_purulent_tea", StrongPurulentTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_STRONG_PURULENT_TEA = registerFluid("flowing_strong_purulent_tea", StrongPurulentTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> STRONG_PURULENT_TEA_BLOCK = registerFluidBlock("strong_purulent_tea_block", STILL_STRONG_PURULENT_TEA);
+    public static final DeferredHolder<Item, BucketItem> STRONG_PURULENT_TEA_BUCKET = registerBucketNoTab("strong_purulent_tea_bucket", STILL_STRONG_PURULENT_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_STRONG_ROSE_HIP_TEA = registerFluid("strong_rose_hip_tea", StrongRoseHipTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_STRONG_ROSE_HIP_TEA = registerFluid("flowing_strong_rose_hip_tea", StrongRoseHipTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> STRONG_ROSE_HIP_TEA_BLOCK = registerFluidBlock("strong_rose_hip_tea_block", STILL_STRONG_ROSE_HIP_TEA);
+    public static final DeferredHolder<Item, BucketItem> STRONG_ROSE_HIP_TEA_BUCKET = registerBucketNoTab("strong_rose_hip_tea_bucket", STILL_STRONG_ROSE_HIP_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_STRONG_BLACK_TEA = registerFluid("strong_black_tea", StrongBlackTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_STRONG_BLACK_TEA = registerFluid("flowing_strong_black_tea", StrongBlackTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> STRONG_BLACK_TEA_BLOCK = registerFluidBlock("strong_black_tea_block", STILL_STRONG_BLACK_TEA);
+    public static final DeferredHolder<Item, BucketItem> STRONG_BLACK_TEA_BUCKET = registerBucketNoTab("strong_black_tea_bucket", STILL_STRONG_BLACK_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_STRONG_YELLOW_TEA = registerFluid("strong_yellow_tea", StrongYellowTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_STRONG_YELLOW_TEA = registerFluid("flowing_strong_yellow_tea", StrongYellowTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> STRONG_YELLOW_TEA_BLOCK = registerFluidBlock("strong_yellow_tea_block", STILL_STRONG_YELLOW_TEA);
+    public static final DeferredHolder<Item, BucketItem> STRONG_YELLOW_TEA_BUCKET = registerBucketNoTab("strong_yellow_tea_bucket", STILL_STRONG_YELLOW_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_STRONG_GREEN_TEA = registerFluid("strong_green_tea", StrongGreenTeaFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_STRONG_GREEN_TEA = registerFluid("flowing_strong_green_tea", StrongGreenTeaFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> STRONG_GREEN_TEA_BLOCK = registerFluidBlock("strong_green_tea_block", STILL_STRONG_GREEN_TEA);
+    public static final DeferredHolder<Item, BucketItem> STRONG_GREEN_TEA_BUCKET = registerBucketNoTab("strong_green_tea_bucket", STILL_STRONG_GREEN_TEA);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_STRONG_COFFEE = registerFluid("strong_coffee", StrongCoffeeFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_STRONG_COFFEE = registerFluid("flowing_strong_coffee", StrongCoffeeFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> STRONG_COFFEE_BLOCK = registerFluidBlock("strong_coffee_block", STILL_STRONG_COFFEE);
+    public static final DeferredHolder<Item, BucketItem> STRONG_COFFEE_BUCKET = registerBucketNoTab("strong_coffee_bucket", STILL_STRONG_COFFEE);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_ROSE_HIP_JAM = registerFluid("rose_hip_jam", RoseHipJamFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_ROSE_HIP_JAM = registerFluid("flowing_rose_hip_jam", RoseHipJamFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> ROSE_HIP_JAM_BLOCK = registerFluidBlock("rose_hip_jam_block", STILL_ROSE_HIP_JAM);
+    public static final DeferredHolder<Item, BucketItem> ROSE_HIP_JAM_BUCKET = registerBucket("rose_hip_jam_bucket", STILL_ROSE_HIP_JAM);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_BLAZING_CHILI = registerFluid("blazing_chili", BlazingChiliFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_BLAZING_CHILI = registerFluid("flowing_blazing_chili", BlazingChiliFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> BLAZING_CHILI_BLOCK = registerFluidBlock("blazing_chili_block", STILL_BLAZING_CHILI);
+    public static final DeferredHolder<Item, BucketItem> BLAZING_CHILI_BUCKET = registerBucket("blazing_chili_bucket", STILL_BLAZING_CHILI);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> STILL_TEA_CURRY = registerFluid("tea_curry", TeaCurryFluid.Still::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_TEA_CURRY = registerFluid("flowing_tea_curry", TeaCurryFluid.Flowing::new);
+    public static final DeferredHolder<Block, LiquidBlock> TEA_CURRY_BLOCK = registerFluidBlock("tea_curry_block", STILL_TEA_CURRY);
+    public static final DeferredHolder<Item, BucketItem> TEA_CURRY_BUCKET = registerBucket("tea_curry_bucket", STILL_TEA_CURRY);
+
+    private static DeferredHolder<Fluid, FlowingFluid> registerFluid(String name, Supplier<FlowingFluid> supplier) {
+        return FLUIDS.register(name, supplier);
+    }
+
+    private static DeferredHolder<Block, LiquidBlock> registerFluidBlock(String name, DeferredHolder<Fluid, FlowingFluid> fluid) {
+        return BLOCKS.register(name, () -> new LiquidBlock(fluid.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
+    }
+
+    private static DeferredHolder<Item, BucketItem> registerBucket(String name, DeferredHolder<Fluid, FlowingFluid> fluid) {
+        return ITEMS.register(name, () -> new BucketItem(fluid.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    }
+
+    private static DeferredHolder<Item, BucketItem> registerBucketNoTab(String name, DeferredHolder<Fluid, FlowingFluid> fluid) {
+        return registerBucket(name, fluid);
+    }
 
     public static boolean isCoffee(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_COFFEE) || state.isOf(ModFluidsRegister.FLOWING_COFFEE);
+        return state.getType() == STILL_COFFEE.get() || state.getType() == FLOWING_COFFEE.get();
     }
 
     public static boolean isPurulentTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_PURULENT_TEA) || state.isOf(ModFluidsRegister.FLOWING_PURULENT_TEA);
+        return state.getType() == STILL_PURULENT_TEA.get() || state.getType() == FLOWING_PURULENT_TEA.get();
     }
 
     public static boolean isDandelionTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_DANDELION_TEA) || state.isOf(ModFluidsRegister.FLOWING_DANDELION_TEA);
+        return state.getType() == STILL_DANDELION_TEA.get() || state.getType() == FLOWING_DANDELION_TEA.get();
     }
 
     public static boolean isRoseHipTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_ROSE_HIP_TEA) || state.isOf(ModFluidsRegister.FLOWING_ROSE_HIP_TEA);
+        return state.getType() == STILL_ROSE_HIP_TEA.get() || state.getType() == FLOWING_ROSE_HIP_TEA.get();
     }
 
     public static boolean isBlackTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_BLACK_TEA) || state.isOf(ModFluidsRegister.FLOWING_BLACK_TEA);
+        return state.getType() == STILL_BLACK_TEA.get() || state.getType() == FLOWING_BLACK_TEA.get();
     }
 
     public static boolean isYellowTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_YELLOW_TEA) || state.isOf(ModFluidsRegister.FLOWING_YELLOW_TEA);
+        return state.getType() == STILL_YELLOW_TEA.get() || state.getType() == FLOWING_YELLOW_TEA.get();
     }
 
     public static boolean isGreenTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_GREEN_TEA) || state.isOf(ModFluidsRegister.FLOWING_GREEN_TEA);
+        return state.getType() == STILL_GREEN_TEA.get() || state.getType() == FLOWING_GREEN_TEA.get();
     }
+
     public static boolean isLongCoffee(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_LONG_COFFEE) || state.isOf(ModFluidsRegister.FLOWING_LONG_COFFEE);
+        return state.getType() == STILL_LONG_COFFEE.get() || state.getType() == FLOWING_LONG_COFFEE.get();
     }
 
     public static boolean isLongDandelionTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_LONG_DANDELION_TEA) || state.isOf(ModFluidsRegister.FLOWING_LONG_DANDELION_TEA);
+        return state.getType() == STILL_LONG_DANDELION_TEA.get() || state.getType() == FLOWING_LONG_DANDELION_TEA.get();
     }
 
     public static boolean isLongBlackTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_LONG_BLACK_TEA) || state.isOf(ModFluidsRegister.FLOWING_LONG_BLACK_TEA);
+        return state.getType() == STILL_LONG_BLACK_TEA.get() || state.getType() == FLOWING_LONG_BLACK_TEA.get();
     }
 
     public static boolean isLongYellowTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_LONG_YELLOW_TEA) || state.isOf(ModFluidsRegister.FLOWING_LONG_YELLOW_TEA);
+        return state.getType() == STILL_LONG_YELLOW_TEA.get() || state.getType() == FLOWING_LONG_YELLOW_TEA.get();
     }
 
     public static boolean isLongGreenTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_LONG_GREEN_TEA) || state.isOf(ModFluidsRegister.FLOWING_LONG_GREEN_TEA);
+        return state.getType() == STILL_LONG_GREEN_TEA.get() || state.getType() == FLOWING_LONG_GREEN_TEA.get();
     }
 
     public static boolean isStrongCoffee(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_STRONG_COFFEE) || state.isOf(ModFluidsRegister.FLOWING_STRONG_COFFEE);
+        return state.getType() == STILL_STRONG_COFFEE.get() || state.getType() == FLOWING_STRONG_COFFEE.get();
     }
 
     public static boolean isStrongPurulentTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_STRONG_PURULENT_TEA) || state.isOf(ModFluidsRegister.FLOWING_STRONG_PURULENT_TEA);
+        return state.getType() == STILL_STRONG_PURULENT_TEA.get() || state.getType() == FLOWING_STRONG_PURULENT_TEA.get();
     }
 
     public static boolean isStrongRoseHipTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_STRONG_ROSE_HIP_TEA) || state.isOf(ModFluidsRegister.FLOWING_STRONG_ROSE_HIP_TEA);
+        return state.getType() == STILL_STRONG_ROSE_HIP_TEA.get() || state.getType() == FLOWING_STRONG_ROSE_HIP_TEA.get();
     }
 
     public static boolean isStrongBlackTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_STRONG_BLACK_TEA) || state.isOf(ModFluidsRegister.FLOWING_STRONG_BLACK_TEA);
+        return state.getType() == STILL_STRONG_BLACK_TEA.get() || state.getType() == FLOWING_STRONG_BLACK_TEA.get();
     }
 
     public static boolean isStrongYellowTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_STRONG_YELLOW_TEA) || state.isOf(ModFluidsRegister.FLOWING_STRONG_YELLOW_TEA);
+        return state.getType() == STILL_STRONG_YELLOW_TEA.get() || state.getType() == FLOWING_STRONG_YELLOW_TEA.get();
     }
 
     public static boolean isStrongGreenTea(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_STRONG_GREEN_TEA) || state.isOf(ModFluidsRegister.FLOWING_STRONG_GREEN_TEA);
+        return state.getType() == STILL_STRONG_GREEN_TEA.get() || state.getType() == FLOWING_STRONG_GREEN_TEA.get();
     }
 
     public static boolean isRoseHipJam(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_ROSE_HIP_JAM) || state.isOf(ModFluidsRegister.FLOWING_ROSE_HIP_JAM);
+        return state.getType() == STILL_ROSE_HIP_JAM.get() || state.getType() == FLOWING_ROSE_HIP_JAM.get();
     }
 
     public static boolean isTeaCurry(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_TEA_CURRY) || state.isOf(ModFluidsRegister.FLOWING_TEA_CURRY);
+        return state.getType() == STILL_TEA_CURRY.get() || state.getType() == FLOWING_TEA_CURRY.get();
     }
 
     public static boolean isBlazingChili(FluidState state) {
-        return state.isOf(ModFluidsRegister.STILL_BLAZING_CHILI) || state.isOf(ModFluidsRegister.FLOWING_BLAZING_CHILI);
-    }
-
-
-    public static void register() {
-        STILL_PURULENT_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "purulent_tea"), new PurulentTeaFluid.Still());
-        FLOWING_PURULENT_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_purulent_tea"), new PurulentTeaFluid.Flowing());
-        PURULENT_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "purulent_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_PURULENT_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        PURULENT_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "purulent_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_PURULENT_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_DANDELION_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "dandelion_tea"), new DandelionTeaFluid.Still());
-        FLOWING_DANDELION_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_dandelion_tea"), new DandelionTeaFluid.Flowing());
-        DANDELION_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "dandelion_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_DANDELION_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        DANDELION_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "dandelion_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_DANDELION_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_ROSE_HIP_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "rose_hip_tea"), new RoseHipTeaFluid.Still());
-        FLOWING_ROSE_HIP_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_rose_hip_tea"), new RoseHipTeaFluid.Flowing());
-        ROSE_HIP_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "rose_hip_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_ROSE_HIP_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        ROSE_HIP_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "rose_hip_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_ROSE_HIP_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_BLACK_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "black_tea"), new BlackTeaFluid.Still());
-        FLOWING_BLACK_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_black_tea"), new BlackTeaFluid.Flowing());
-        BLACK_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "black_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_BLACK_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        BLACK_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "black_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_BLACK_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_YELLOW_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "yellow_tea"), new YellowTeaFluid.Still());
-        FLOWING_YELLOW_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_yellow_tea"), new YellowTeaFluid.Flowing());
-        YELLOW_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "yellow_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_YELLOW_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        YELLOW_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "yellow_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_YELLOW_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_GREEN_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "green_tea"), new GreenTeaFluid.Still());
-        FLOWING_GREEN_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_green_tea"), new GreenTeaFluid.Flowing());
-        GREEN_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "green_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_GREEN_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        GREEN_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "green_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_GREEN_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_COFFEE = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "coffee"), new CoffeeFluid.Still());
-        FLOWING_COFFEE = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_coffee"), new CoffeeFluid.Flowing());
-        COFFEE_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "coffee_block"),
-                new FluidBlock(ModFluidsRegister.STILL_COFFEE, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        COFFEE_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "coffee_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_COFFEE, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_LONG_DANDELION_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "long_dandelion_tea"), new LongDandelionTeaFluid.Still());
-        FLOWING_LONG_DANDELION_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_long_dandelion_tea"), new LongDandelionTeaFluid.Flowing());
-        LONG_DANDELION_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "long_dandelion_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_DANDELION_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        LONG_DANDELION_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "long_dandelion_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_DANDELION_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_LONG_BLACK_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "long_black_tea"), new LongBlackTeaFluid.Still());
-        FLOWING_LONG_BLACK_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_long_black_tea"), new LongBlackTeaFluid.Flowing());
-        LONG_BLACK_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "long_black_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_LONG_BLACK_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        LONG_BLACK_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "long_black_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_LONG_BLACK_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_LONG_YELLOW_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "long_yellow_tea"), new LongYellowTeaFluid.Still());
-        FLOWING_LONG_YELLOW_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_long_yellow_tea"), new LongYellowTeaFluid.Flowing());
-        LONG_YELLOW_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "long_yellow_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_LONG_YELLOW_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        LONG_YELLOW_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "long_yellow_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_LONG_YELLOW_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_LONG_GREEN_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "long_green_tea"), new LongGreenTeaFluid.Still());
-        FLOWING_LONG_GREEN_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_long_green_tea"), new LongGreenTeaFluid.Flowing());
-        LONG_GREEN_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "long_green_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_LONG_GREEN_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        LONG_GREEN_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "long_green_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_LONG_GREEN_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_LONG_COFFEE = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "long_coffee"), new LongCoffeeFluid.Still());
-        FLOWING_LONG_COFFEE = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_long_coffee"), new LongCoffeeFluid.Flowing());
-        LONG_COFFEE_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "long_coffee_block"),
-                new FluidBlock(ModFluidsRegister.STILL_LONG_COFFEE, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        LONG_COFFEE_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "long_coffee_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_LONG_COFFEE, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_STRONG_PURULENT_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "strong_purulent_tea"), new StrongPurulentTeaFluid.Still());
-        FLOWING_STRONG_PURULENT_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_strong_purulent_tea"), new StrongPurulentTeaFluid.Flowing());
-        STRONG_PURULENT_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_purulent_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_STRONG_PURULENT_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        STRONG_PURULENT_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_purulent_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_STRONG_PURULENT_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_STRONG_ROSE_HIP_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "strong_rose_hip_tea"), new StrongRoseHipTeaFluid.Still());
-        FLOWING_STRONG_ROSE_HIP_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_strong_rose_hip_tea"), new StrongRoseHipTeaFluid.Flowing());
-        STRONG_ROSE_HIP_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_rose_hip_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_STRONG_ROSE_HIP_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        STRONG_ROSE_HIP_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_rose_hip_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_STRONG_ROSE_HIP_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_STRONG_BLACK_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "strong_black_tea"), new StrongBlackTeaFluid.Still());
-        FLOWING_STRONG_BLACK_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_strong_black_tea"), new StrongBlackTeaFluid.Flowing());
-        STRONG_BLACK_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_black_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_STRONG_BLACK_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        STRONG_BLACK_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_black_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_STRONG_BLACK_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_STRONG_YELLOW_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "strong_yellow_tea"), new StrongYellowTeaFluid.Still());
-        FLOWING_STRONG_YELLOW_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_strong_yellow_tea"), new StrongYellowTeaFluid.Flowing());
-        STRONG_YELLOW_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_yellow_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_STRONG_YELLOW_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        STRONG_YELLOW_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_yellow_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_STRONG_YELLOW_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_STRONG_GREEN_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "strong_green_tea"), new StrongGreenTeaFluid.Still());
-        FLOWING_STRONG_GREEN_TEA = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_strong_green_tea"), new StrongGreenTeaFluid.Flowing());
-        STRONG_GREEN_TEA_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_green_tea_block"),
-                new FluidBlock(ModFluidsRegister.STILL_STRONG_GREEN_TEA, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        STRONG_GREEN_TEA_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_green_tea_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_STRONG_GREEN_TEA, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_STRONG_COFFEE = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "strong_coffee"), new StrongCoffeeFluid.Still());
-        FLOWING_STRONG_COFFEE = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_strong_coffee"), new StrongCoffeeFluid.Flowing());
-        STRONG_COFFEE_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_coffee_block"),
-                new FluidBlock(ModFluidsRegister.STILL_STRONG_COFFEE, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        STRONG_COFFEE_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "strong_coffee_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_STRONG_COFFEE, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_ROSE_HIP_JAM = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "rose_hip_jam"), new RoseHipJamFluid.Still());
-        FLOWING_ROSE_HIP_JAM = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_rose_hip_jam"), new RoseHipJamFluid.Flowing());
-        ROSE_HIP_JAM_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "rose_hip_jam_block"),
-                new FluidBlock(ModFluidsRegister.STILL_ROSE_HIP_JAM, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        ROSE_HIP_JAM_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "rose_hip_jam_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_ROSE_HIP_JAM, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_BLAZING_CHILI = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "blazing_chili"), new BlazingChiliFluid.Still());
-        FLOWING_BLAZING_CHILI = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_blazing_chili"), new BlazingChiliFluid.Flowing());
-        BLAZING_CHILI_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "blazing_chili_block"),
-                new FluidBlock(ModFluidsRegister.STILL_BLAZING_CHILI, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        BLAZING_CHILI_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "blazing_chili_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_BLAZING_CHILI, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
-
-        STILL_TEA_CURRY = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "tea_curry"), new TeaCurryFluid.Still());
-        FLOWING_TEA_CURRY = Registry.register(Registries.FLUID,
-                new Identifier(RespiteCreatorsMod.MOD_ID, "flowing_tea_curry"), new TeaCurryFluid.Flowing());
-        TEA_CURRY_BLOCK = Registry.register(Registries.BLOCK, new Identifier(RespiteCreatorsMod.MOD_ID, "tea_curry_block"),
-                new FluidBlock(ModFluidsRegister.STILL_TEA_CURRY, FabricBlockSettings.copyOf(Blocks.WATER).replaceable()));
-        TEA_CURRY_BUCKET = Registry.register(Registries.ITEM, new Identifier(RespiteCreatorsMod.MOD_ID, "tea_curry_bucket"),
-                new BucketItem(ModFluidsRegister.STILL_TEA_CURRY, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
+        return state.getType() == STILL_BLAZING_CHILI.get() || state.getType() == FLOWING_BLAZING_CHILI.get();
     }
 }

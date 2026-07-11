@@ -1,160 +1,110 @@
 package flomik.respitecreators;
 
+import flomik.respitecreators.init.ModFluidTypesRegister;
 import flomik.respitecreators.init.ModFluidsRegister;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 
-public class RespiteCreatorsModClient implements ClientModInitializer {
-    @Override
-    public void onInitializeClient() {
+@EventBusSubscriber(modid = RespiteCreatorsMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+public class RespiteCreatorsModClient {
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_PURULENT_TEA, ModFluidsRegister.FLOWING_PURULENT_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0xa62530
-        ));
+    private static final ResourceLocation WATER_STILL = ResourceLocation.withDefaultNamespace("block/water_still");
+    private static final ResourceLocation WATER_FLOW = ResourceLocation.withDefaultNamespace("block/water_flow");
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_DANDELION_TEA, ModFluidsRegister.FLOWING_DANDELION_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0xe6cd6c
-        ));
+    private static IClientFluidTypeExtensions waterLike(int tint) {
+        return new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return WATER_STILL;
+            }
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_ROSE_HIP_TEA, ModFluidsRegister.FLOWING_ROSE_HIP_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0x86200e
-        ));
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return WATER_FLOW;
+            }
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_BLACK_TEA, ModFluidsRegister.FLOWING_BLACK_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0x783e27
-        ));
+            @Override
+            public int getTintColor() {
+                return 0xFF000000 | tint;
+            }
+        };
+    }
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_YELLOW_TEA, ModFluidsRegister.FLOWING_YELLOW_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0xab8542
-        ));
+    private static IClientFluidTypeExtensions customTextured(String stillPath, String flowPath) {
+        ResourceLocation still = ResourceLocation.fromNamespaceAndPath(RespiteCreatorsMod.MOD_ID, stillPath);
+        ResourceLocation flow = ResourceLocation.fromNamespaceAndPath(RespiteCreatorsMod.MOD_ID, flowPath);
+        return new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return still;
+            }
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_GREEN_TEA, ModFluidsRegister.FLOWING_GREEN_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0xa1a83c
-        ));
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return flow;
+            }
+        };
+    }
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_COFFEE, ModFluidsRegister.FLOWING_COFFEE, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0x321f13
-        ));
+    @SubscribeEvent
+    public static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerFluidType(waterLike(0xa62530), ModFluidTypesRegister.PURULENT_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0xe6cd6c), ModFluidTypesRegister.DANDELION_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0x86200e), ModFluidTypesRegister.ROSE_HIP_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0x783e27), ModFluidTypesRegister.BLACK_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0xab8542), ModFluidTypesRegister.YELLOW_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0xa1a83c), ModFluidTypesRegister.GREEN_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0x321f13), ModFluidTypesRegister.COFFEE_TYPE.get());
+        event.registerFluidType(waterLike(0xe6cd6c), ModFluidTypesRegister.LONG_DANDELION_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0x783e27), ModFluidTypesRegister.LONG_BLACK_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0xab8542), ModFluidTypesRegister.LONG_YELLOW_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0xa1a83c), ModFluidTypesRegister.LONG_GREEN_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0x321f13), ModFluidTypesRegister.LONG_COFFEE_TYPE.get());
+        event.registerFluidType(waterLike(0xa62530), ModFluidTypesRegister.STRONG_PURULENT_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0x86200e), ModFluidTypesRegister.STRONG_ROSE_HIP_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0x783e27), ModFluidTypesRegister.STRONG_BLACK_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0xab8542), ModFluidTypesRegister.STRONG_YELLOW_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0xa1a83c), ModFluidTypesRegister.STRONG_GREEN_TEA_TYPE.get());
+        event.registerFluidType(waterLike(0x321f13), ModFluidTypesRegister.STRONG_COFFEE_TYPE.get());
+        event.registerFluidType(customTextured("block/rose_hip_jam_still", "block/rose_hip_jam_flow"), ModFluidTypesRegister.ROSE_HIP_JAM_TYPE.get());
+        event.registerFluidType(customTextured("block/blazing_chili_still", "block/blazing_chili_flow"), ModFluidTypesRegister.BLAZING_CHILI_TYPE.get());
+        event.registerFluidType(customTextured("block/tea_curry_still", "block/tea_curry_flow"), ModFluidTypesRegister.TEA_CURRY_TYPE.get());
+    }
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_LONG_DANDELION_TEA, ModFluidsRegister.FLOWING_LONG_DANDELION_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0xe6cd6c
-        ));
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        setTranslucent(ModFluidsRegister.STILL_PURULENT_TEA.get(), ModFluidsRegister.FLOWING_PURULENT_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_DANDELION_TEA.get(), ModFluidsRegister.FLOWING_DANDELION_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_ROSE_HIP_TEA.get(), ModFluidsRegister.FLOWING_ROSE_HIP_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_BLACK_TEA.get(), ModFluidsRegister.FLOWING_BLACK_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_YELLOW_TEA.get(), ModFluidsRegister.FLOWING_YELLOW_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_GREEN_TEA.get(), ModFluidsRegister.FLOWING_GREEN_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_COFFEE.get(), ModFluidsRegister.FLOWING_COFFEE.get());
+        setTranslucent(ModFluidsRegister.STILL_LONG_DANDELION_TEA.get(), ModFluidsRegister.FLOWING_LONG_DANDELION_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_LONG_BLACK_TEA.get(), ModFluidsRegister.FLOWING_LONG_BLACK_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_LONG_YELLOW_TEA.get(), ModFluidsRegister.FLOWING_LONG_YELLOW_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_LONG_GREEN_TEA.get(), ModFluidsRegister.FLOWING_LONG_GREEN_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_LONG_COFFEE.get(), ModFluidsRegister.FLOWING_LONG_COFFEE.get());
+        setTranslucent(ModFluidsRegister.STILL_STRONG_PURULENT_TEA.get(), ModFluidsRegister.FLOWING_STRONG_PURULENT_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_STRONG_ROSE_HIP_TEA.get(), ModFluidsRegister.FLOWING_STRONG_ROSE_HIP_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_STRONG_BLACK_TEA.get(), ModFluidsRegister.FLOWING_STRONG_BLACK_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_STRONG_YELLOW_TEA.get(), ModFluidsRegister.FLOWING_STRONG_YELLOW_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_STRONG_GREEN_TEA.get(), ModFluidsRegister.FLOWING_STRONG_GREEN_TEA.get());
+        setTranslucent(ModFluidsRegister.STILL_STRONG_COFFEE.get(), ModFluidsRegister.FLOWING_STRONG_COFFEE.get());
+        setTranslucent(ModFluidsRegister.STILL_ROSE_HIP_JAM.get(), ModFluidsRegister.FLOWING_ROSE_HIP_JAM.get());
+        setTranslucent(ModFluidsRegister.STILL_BLAZING_CHILI.get(), ModFluidsRegister.FLOWING_BLAZING_CHILI.get());
+        setTranslucent(ModFluidsRegister.STILL_TEA_CURRY.get(), ModFluidsRegister.FLOWING_TEA_CURRY.get());
+    }
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_LONG_BLACK_TEA, ModFluidsRegister.FLOWING_LONG_BLACK_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0x783e27
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_LONG_YELLOW_TEA, ModFluidsRegister.FLOWING_LONG_YELLOW_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0xab8542
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_LONG_GREEN_TEA, ModFluidsRegister.FLOWING_LONG_GREEN_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0xa1a83c
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_LONG_COFFEE, ModFluidsRegister.FLOWING_LONG_COFFEE, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0x321f13
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_STRONG_PURULENT_TEA, ModFluidsRegister.FLOWING_STRONG_PURULENT_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0xa62530
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_STRONG_ROSE_HIP_TEA, ModFluidsRegister.FLOWING_STRONG_ROSE_HIP_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0x86200e
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_STRONG_BLACK_TEA, ModFluidsRegister.FLOWING_STRONG_BLACK_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0x783e27
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_STRONG_YELLOW_TEA, ModFluidsRegister.FLOWING_STRONG_YELLOW_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0xab8542
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_STRONG_GREEN_TEA, ModFluidsRegister.FLOWING_STRONG_GREEN_TEA, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0xa1a83c
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_STRONG_COFFEE, ModFluidsRegister.FLOWING_STRONG_COFFEE, new SimpleFluidRenderHandler(
-                new Identifier("minecraft:block/water_still"),
-                new Identifier("minecraft:block/water_flow"),
-                0x321f13
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_ROSE_HIP_JAM, ModFluidsRegister.FLOWING_ROSE_HIP_JAM, new SimpleFluidRenderHandler(
-                new Identifier("respitecreators:block/rose_hip_jam_still"),
-                new Identifier("respitecreators:block/rose_hip_jam_flow")
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_TEA_CURRY, ModFluidsRegister.FLOWING_TEA_CURRY, new SimpleFluidRenderHandler(
-                new Identifier("respitecreators:block/tea_curry_still"),
-                new Identifier("respitecreators:block/tea_curry_flow")
-        ));
-
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluidsRegister.STILL_BLAZING_CHILI, ModFluidsRegister.FLOWING_BLAZING_CHILI, new SimpleFluidRenderHandler(
-                new Identifier("respitecreators:block/blazing_chili_still"),
-                new Identifier("respitecreators:block/blazing_chili_flow")
-        ));
-
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_PURULENT_TEA, ModFluidsRegister.FLOWING_PURULENT_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_DANDELION_TEA, ModFluidsRegister.FLOWING_DANDELION_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_ROSE_HIP_TEA, ModFluidsRegister.FLOWING_ROSE_HIP_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_BLACK_TEA, ModFluidsRegister.FLOWING_BLACK_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_YELLOW_TEA, ModFluidsRegister.FLOWING_YELLOW_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_GREEN_TEA, ModFluidsRegister.FLOWING_GREEN_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_COFFEE, ModFluidsRegister.FLOWING_COFFEE);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_LONG_DANDELION_TEA, ModFluidsRegister.FLOWING_LONG_DANDELION_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_LONG_BLACK_TEA, ModFluidsRegister.FLOWING_LONG_BLACK_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_LONG_YELLOW_TEA, ModFluidsRegister.FLOWING_LONG_YELLOW_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_LONG_GREEN_TEA, ModFluidsRegister.FLOWING_LONG_GREEN_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_LONG_COFFEE, ModFluidsRegister.FLOWING_LONG_COFFEE);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_STRONG_PURULENT_TEA, ModFluidsRegister.FLOWING_STRONG_PURULENT_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_STRONG_ROSE_HIP_TEA, ModFluidsRegister.FLOWING_STRONG_ROSE_HIP_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_STRONG_BLACK_TEA, ModFluidsRegister.FLOWING_STRONG_BLACK_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_STRONG_YELLOW_TEA, ModFluidsRegister.FLOWING_STRONG_YELLOW_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_STRONG_GREEN_TEA, ModFluidsRegister.FLOWING_STRONG_GREEN_TEA);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_STRONG_COFFEE, ModFluidsRegister.FLOWING_STRONG_COFFEE);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_ROSE_HIP_JAM, ModFluidsRegister.FLOWING_ROSE_HIP_JAM);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.FLOWING_BLAZING_CHILI, ModFluidsRegister.FLOWING_BLAZING_CHILI);
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModFluidsRegister.STILL_TEA_CURRY, ModFluidsRegister.FLOWING_TEA_CURRY);
+    private static void setTranslucent(net.minecraft.world.level.material.Fluid still, net.minecraft.world.level.material.Fluid flowing) {
+        ItemBlockRenderTypes.setRenderLayer(still, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(flowing, RenderType.translucent());
     }
 }

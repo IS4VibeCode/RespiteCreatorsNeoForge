@@ -1,54 +1,54 @@
 package flomik.respitecreators.fluids;
 
 import flomik.respitecreators.init.ModFluidsRegister;
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.state.StateDefinition;
 
 public abstract class CoffeeFluid extends ModFluidsTemplate {
 
     @Override
-    public Fluid getStill() {
-        return ModFluidsRegister.STILL_COFFEE;
-    }
-
-    @Override
     public Fluid getFlowing() {
-        return ModFluidsRegister.FLOWING_COFFEE;
+        return ModFluidsRegister.FLOWING_COFFEE.get();
     }
 
     @Override
-    public Item getBucketItem() {
-        return ModFluidsRegister.COFFEE_BUCKET;
+    public Fluid getSource() {
+        return ModFluidsRegister.STILL_COFFEE.get();
     }
 
     @Override
-    protected BlockState toBlockState(FluidState state) {
-        return ModFluidsRegister.COFFEE_BLOCK.getDefaultState().with(Properties.LEVEL_15, getBlockStateLevel(state));
+    public Item getBucket() {
+        return ModFluidsRegister.COFFEE_BUCKET.get();
     }
 
     @Override
-    public boolean matchesType(Fluid fluid) {
-        return fluid == getStill() || fluid == getFlowing();
+    public BlockState createLegacyBlock(FluidState state) {
+        return ModFluidsRegister.COFFEE_BLOCK.get().defaultBlockState().setValue(BlockStateProperties.LEVEL, getLegacyLevel(state));
+    }
+
+    @Override
+    public net.neoforged.neoforge.fluids.FluidType getFluidType() {
+        return flomik.respitecreators.init.ModFluidTypesRegister.COFFEE_TYPE.get();
     }
 
     public static class Flowing extends CoffeeFluid {
         @Override
-        protected void appendProperties(StateManager.Builder<Fluid, FluidState> builder) {
-            super.appendProperties(builder);
+        protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
+            super.createFluidStateDefinition(builder);
             builder.add(LEVEL);
         }
 
         @Override
-        public int getLevel(FluidState state) {
-            return state.get(LEVEL);
+        public int getAmount(FluidState state) {
+            return state.getValue(LEVEL);
         }
 
         @Override
-        public boolean isStill(FluidState state) {
+        public boolean isSource(FluidState state) {
             return false;
         }
 
@@ -56,12 +56,12 @@ public abstract class CoffeeFluid extends ModFluidsTemplate {
 
     public static class Still extends CoffeeFluid {
         @Override
-        public int getLevel(FluidState state) {
+        public int getAmount(FluidState state) {
             return 8;
         }
 
         @Override
-        public boolean isStill(FluidState state) {
+        public boolean isSource(FluidState state) {
             return true;
         }
     }

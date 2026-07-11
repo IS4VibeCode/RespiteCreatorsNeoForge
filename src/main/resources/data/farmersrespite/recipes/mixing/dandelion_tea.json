@@ -1,8 +1,16 @@
 {
-  "fabric:load_conditions": [
+  "neoforge:conditions": [
     {
-      "condition": "fabric:all_mods_loaded",
-      "values": ["create", "farmersdelight", "farmersrespite"]
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersrespite"
     }
   ],
   "type": "create:mixing",
@@ -16,7 +24,7 @@
       "item": "minecraft:dandelion"
     },
     {
-      "tag": "c:tea_leaves"
+      "tag": "c:crops/tea_leaves"
     }
   ],
   "results": [

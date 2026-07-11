@@ -1,82 +1,67 @@
 package flomik.respitecreators.fluids;
 
 import flomik.respitecreators.init.ModFluidsRegister;
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.state.StateDefinition;
 
 public abstract class DandelionTeaFluid extends ModFluidsTemplate {
 
     @Override
-    public Fluid getStill() {
-        return ModFluidsRegister.STILL_DANDELION_TEA;
-    }
-
-    @Override
     public Fluid getFlowing() {
-        return ModFluidsRegister.FLOWING_DANDELION_TEA;
+        return ModFluidsRegister.FLOWING_DANDELION_TEA.get();
     }
 
     @Override
-    public Item getBucketItem() {
-        return ModFluidsRegister.DANDELION_TEA_BUCKET;
+    public Fluid getSource() {
+        return ModFluidsRegister.STILL_DANDELION_TEA.get();
     }
 
     @Override
-    protected BlockState toBlockState(FluidState state) {
-        return ModFluidsRegister.DANDELION_TEA_BLOCK.getDefaultState().with(Properties.LEVEL_15, getBlockStateLevel(state));
+    public Item getBucket() {
+        return ModFluidsRegister.DANDELION_TEA_BUCKET.get();
     }
 
     @Override
-    public boolean matchesType(Fluid fluid) {
-        return fluid == getStill() || fluid == getFlowing();
+    public BlockState createLegacyBlock(FluidState state) {
+        return ModFluidsRegister.DANDELION_TEA_BLOCK.get().defaultBlockState().setValue(BlockStateProperties.LEVEL, getLegacyLevel(state));
     }
 
     @Override
-    protected int getFlowSpeed(WorldView worldView) {
-        return 4;
-    }
-
-    @Override
-    protected int getLevelDecreasePerBlock(WorldView worldView) {
-        return 1;
-    }
-
-    @Override
-    public int getTickRate(WorldView worldView) {
-        return 5;
+    public net.neoforged.neoforge.fluids.FluidType getFluidType() {
+        return flomik.respitecreators.init.ModFluidTypesRegister.DANDELION_TEA_TYPE.get();
     }
 
     public static class Flowing extends DandelionTeaFluid {
         @Override
-        protected void appendProperties(StateManager.Builder<Fluid, FluidState> builder) {
-            super.appendProperties(builder);
+        protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
+            super.createFluidStateDefinition(builder);
             builder.add(LEVEL);
         }
 
         @Override
-        public int getLevel(FluidState state) {
-            return state.get(LEVEL);
+        public int getAmount(FluidState state) {
+            return state.getValue(LEVEL);
         }
 
         @Override
-        public boolean isStill(FluidState state) {
+        public boolean isSource(FluidState state) {
             return false;
         }
+
     }
 
     public static class Still extends DandelionTeaFluid {
         @Override
-        public int getLevel(FluidState state) {
+        public int getAmount(FluidState state) {
             return 8;
         }
 
         @Override
-        public boolean isStill(FluidState state) {
+        public boolean isSource(FluidState state) {
             return true;
         }
     }

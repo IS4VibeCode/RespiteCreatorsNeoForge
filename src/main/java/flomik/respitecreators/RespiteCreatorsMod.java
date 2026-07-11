@@ -1,20 +1,27 @@
 package flomik.respitecreators;
 
 import flomik.respitecreators.init.ModFluidsRegister;
+import flomik.respitecreators.init.ModFluidTypesRegister;
 import flomik.respitecreators.init.ModItemsRegister;
 import flomik.respitecreators.item.ModItemsGroup;
-import net.fabricmc.api.ModInitializer;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RespiteCreatorsMod implements ModInitializer {
+@Mod(RespiteCreatorsMod.MOD_ID)
+public class RespiteCreatorsMod {
     public static final String MOD_ID = "respitecreators";
-	public static final Logger LOGGER = LoggerFactory.getLogger("Respite Creators");
+    public static final Logger LOGGER = LoggerFactory.getLogger("Respite Creators");
 
-	@Override
-	public void onInitialize() {
-		ModFluidsRegister.register();
-		ModItemsRegister.registerModItems();
-		ModItemsGroup.registerModItemGroup();
-	}
+    public RespiteCreatorsMod(IEventBus modEventBus) {
+        ModFluidTypesRegister.FLUID_TYPES.register(modEventBus);
+        ModFluidsRegister.FLUIDS.register(modEventBus);
+        ModFluidsRegister.BLOCKS.register(modEventBus);
+        ModFluidsRegister.ITEMS.register(modEventBus);
+        ModItemsGroup.REGISTRY.register(modEventBus);
+
+        ModItemsRegister.registerModItems();
+        ModItemsGroup.registerModItemGroup();
+    }
 }

@@ -1,8 +1,12 @@
 {
-  "fabric:load_conditions": [
+  "neoforge:conditions": [
     {
-      "condition": "fabric:all_mods_loaded",
-      "values": ["create", "farmersdelight"]
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
     }
   ],
   "type": "create:sequenced_assembly",
@@ -23,7 +27,7 @@
           "item": "respitecreators:incomplete_black_cod"
         },
         {
-          "tag": "c:cooked_fishes/cod"
+          "tag": "c:foods/cooked_cod"
         }
       ],
       "results": [

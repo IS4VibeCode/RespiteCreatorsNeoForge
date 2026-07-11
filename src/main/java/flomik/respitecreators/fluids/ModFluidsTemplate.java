@@ -1,73 +1,70 @@
 package flomik.respitecreators.fluids;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.*;
-import org.jetbrains.annotations.Nullable;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
-public abstract class ModFluidsTemplate extends FlowableFluid {
+public abstract class ModFluidsTemplate extends FlowingFluid {
 
     @Override
-    public Optional<SoundEvent> getBucketFillSound() {
-        return Optional.of(SoundEvents.ITEM_BUCKET_FILL);
+    public Optional<SoundEvent> getPickupSound() {
+        return Optional.of(SoundEvents.BUCKET_FILL);
     }
 
     @Nullable
-    protected ParticleEffect getParticle() {
+    protected ParticleOptions getParticle() {
         return null;
     }
 
     @Override
-    public boolean matchesType(Fluid fluid) {
-        return fluid.equals(getStill()) || fluid.equals(getFlowing());
+    protected boolean canConvertToSource(Level level) {
+        return level.getGameRules().getBoolean(GameRules.RULE_LAVA_SOURCE_CONVERSION);
     }
 
     @Override
-    protected void beforeBreakingBlock(WorldAccess world, BlockPos pos, BlockState state) {
-        final BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
-        Block.dropStacks(state, world, pos, blockEntity);
+    protected void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state) {
+        final BlockEntity blockEntity = state.hasBlockEntity() ? level.getBlockEntity(pos) : null;
+        Block.dropResources(state, level, pos, blockEntity);
     }
 
     @Override
-    public boolean canBeReplacedWith(FluidState state, BlockView world, BlockPos pos, Fluid fluid, Direction direction) {
+    public boolean canBeReplacedWith(FluidState fluidState, BlockGetter blockGetter, BlockPos blockPos, Fluid fluid, Direction direction) {
         return false;
     }
 
     @Override
-    protected boolean isInfinite(World world) {
-        return world.getGameRules().getBoolean(GameRules.LAVA_SOURCE_CONVERSION);
-    }
-
-    @Override
-    protected int getFlowSpeed(WorldView worldView) {
+    public int getSlopeFindDistance(LevelReader levelReader) {
         return 2;
     }
 
     @Override
-    protected int getLevelDecreasePerBlock(WorldView worldView) {
+    public int getDropOff(LevelReader levelReader) {
         return 2;
     }
 
     @Override
-    public int getTickRate(WorldView worldView) {
+    public int getTickDelay(LevelReader levelReader) {
         return 30;
     }
 
     @Override
-    protected float getBlastResistance() {
+    protected float getExplosionResistance() {
         return 100.0f;
     }
-
 
 }
